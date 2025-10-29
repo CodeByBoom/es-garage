@@ -539,7 +539,7 @@ This resource is a **derivative work** based on the original ES Garage by Raider
 - Credit to original author (**Raider#0101**)
 - Credit to Sandbox adaptation (**CodeByBoom**)
 
-**© 2025 | Derivative work based on ES Garage by Raider#0101**
+**© 2025 | v2.0.0 | Derivative work based on ES Garage by Raider#0101**
 
 </div>
 

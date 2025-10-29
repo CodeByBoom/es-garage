@@ -2,7 +2,7 @@ fx_version "cerulean"
 
 description "ES Garage - Modern Garage System with Advanced UI for Sandbox Framework"
 author "ES Garage Team | Adapted for Sandbox Framework"
-version '3.0.0'
+version '2.0.0'
 
 game "gta5"
 
