@@ -559,6 +559,4 @@ This resource is a **derivative work** based on the original ES Garage by Raider
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:6100FF,50:8000FF,100:9F00FF&height=120&section=footer"/>
 
-**Made with 💜 by CodeByBoom | Based on ES Garage by Raider#0101**
-
 </div>
