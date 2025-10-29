@@ -26,9 +26,7 @@
 | **Player Table** | `player_vehicles` | **`owned_vehicles`** |
 | **Fuel Integration** | ✅ LegacyFuel compatible | ❌ Not needed (framework handles) |
 | **Car Keys** | ✅ Manual integration | ❌ Not needed (framework handles) |
-| **UI Framework** | jQuery + Vue.js (CDN) | **Vue 3 + Vite + Bun** |
-| **Build Process** | ❌ None | ✅ **Bun build system** |
-| **Dev Mode** | ❌ Not available | ✅ **Live browser preview** |
+| **UI Framework** | jQuery + Vue.js (CDN) | **Vue 3** |
 | **Responsive** | ❌ Fixed size | ✅ **1080p/1440p/4K optimized** |
 | **HUD Hiding** | ❌ No | ✅ **Auto-hides status/location/voice** |
 | **Camera Controls** | Mouse drag, wheel | **Same + enhanced rotation** |
@@ -67,16 +65,15 @@ New features unique to Sandbox adaptation:
 3. ✅ **JSON Persistence** - Server-side parking data storage (`parking_spaces.json`)
 4. ✅ **PolyZone Integration** - Automatic zone creation from _vehicleStorage
 5. ✅ **F1 Interaction Menu** - Native Sandbox interaction system
-6. ✅ **Modern UI Stack** - Vue 3 + Vite + Bun
+6. ✅ **Modern UI** - Vue 3 framework
 7. ✅ **Responsive Design** - Scales for 1080p/1440p/4K
-8. ✅ **Dev Mode** - Live browser preview at http://localhost:5173
-9. ✅ **HUD Hiding** - Cleaner UI (hides status, location, voice, map)
-10. ✅ **Keyboard Navigation** - Arrow keys to scroll vehicles
-11. ✅ **Organized File Structure** - Everything UI-related in `ui/` folder
-12. ✅ **Automatic Garage Loading** - Reads from sandbox-vehicles `_vehicleStorage`
-13. ✅ **Garage-Specific Stats** - Shows counts per garage, not global
-14. ✅ **Enhanced Camera Controls** - Improved rotation logic
-15. ✅ **Oswald Font** - Modern, clean typography
+8. ✅ **HUD Hiding** - Cleaner UI (hides status, location, voice, map)
+9. ✅ **Keyboard Navigation** - Arrow keys to scroll vehicles
+10. ✅ **Organized File Structure** - Everything UI-related in `ui/` folder
+11. ✅ **Automatic Garage Loading** - Reads from sandbox-vehicles `_vehicleStorage`
+12. ✅ **Garage-Specific Stats** - Shows counts per garage, not global
+13. ✅ **Enhanced Camera Controls** - Improved rotation logic
+14. ✅ **Oswald Font** - Modern, clean typography
 
 ---
 
@@ -263,27 +260,15 @@ es-garage/
 es-garage/
 ├── ui/
 │   ├── assets/car/        (775 vehicle images)
-│   ├── dist/              (Built UI files)
-│   ├── src/               (Vue 3 source code)
+│   ├── dist/              (UI files)
+│   ├── src/               (UI source)
+│   ├── node_modules/      (Dependencies included)
 │   └── package.json
 ├── client/client.lua
 ├── server/server.lua
 ├── config.lua
 ├── parking_spaces.json    (Auto-generated)
 └── fxmanifest.lua
-```
-
----
-
-## Development
-
-### Building UI
-
-```bash
-cd ui
-bun install
-bun run dev     # Live preview: http://localhost:5173
-bun run build   # Production build
 ```
 
 ---
@@ -299,7 +284,7 @@ bun run build   # Production build
 
 **Sandbox Adaptation (v3.0.0)**
 - Complete rewrite for Sandbox Framework
-- Vue 3 + Vite + Bun modernization
+- Modern UI with Vue 3
 - New features: VIN tracking, parking memory, PolyZone integration
 - Attribution: Derivative work based on original ES Garage design
 
