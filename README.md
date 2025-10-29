@@ -6,7 +6,7 @@
 
 <br/>
 
-![Version](https://img.shields.io/badge/Version-3.0.0-8000FF?style=for-the-badge&logo=semantic-release&logoColor=white)
+![Version](https://img.shields.io/badge/Version-2.0.0-8000FF?style=for-the-badge&logo=semantic-release&logoColor=white)
 ![Framework](https://img.shields.io/badge/Framework-Sandbox-00D9FF?style=for-the-badge&logo=fivem&logoColor=white)
 ![UI](https://img.shields.io/badge/UI-Vue%203-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
 ![License](https://img.shields.io/badge/License-Custom-FF6B6B?style=for-the-badge&logo=shield&logoColor=white)
@@ -492,7 +492,7 @@ es-garage/
 </td>
 <td width="50%">
 
-### ✨ Sandbox Adaptation (v3.0.0)
+### ✨ Sandbox Adaptation (v2.0.0)
 
 **Adapted By:** CodeByBoom  
 **Framework:** Sandbox Framework ONLY  
