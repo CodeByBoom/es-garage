@@ -362,7 +362,6 @@ onMounted(() => {
   
   // Auto-load mock data ONLY in browser (not in FiveM)
   if (isBrowser) {
-    console.log('[BROWSER MODE] Auto-loading mock garage data for development...')
     setTimeout(() => {
       handleMessage({ data: mockGarageData })
     }, 500)

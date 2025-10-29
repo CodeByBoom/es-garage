@@ -138,11 +138,6 @@ Complete rewrite for **Sandbox Framework ONLY** - Based on [Original ES Garage b
 <td>❌ Removed (performance)</td>
 </tr>
 <tr>
-<td><b>Statistics</b></td>
-<td>Global vehicle counts</td>
-<td>✅ <b>Garage-specific counts</b></td>
-</tr>
-<tr>
 <td><b>File Structure</b></td>
 <td>Flat (root level)</td>
 <td>✅ <b>Organized (ui/ folder)</b></td>
@@ -198,7 +193,6 @@ Complete rewrite for **Sandbox Framework ONLY** - Based on [Original ES Garage b
 + Keyboard Navigation - Arrow keys to scroll vehicles
 + Organized File Structure - Everything UI-related in ui/ folder
 + Automatic Garage Loading - Reads from sandbox-vehicles _vehicleStorage
-+ Garage-Specific Stats - Shows counts per garage, not global
 + Enhanced Camera Controls - Improved rotation logic
 + Oswald Font - Modern, clean typography
 ```
@@ -558,5 +552,7 @@ This resource is a **derivative work** based on the original ES Garage by Raider
 <br/><br/>
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:6100FF,50:8000FF,100:9F00FF&height=120&section=footer"/>
+
+**Made with 💜 by CodeByBoom | Based on ES Garage by Raider#0101**
 
 </div>

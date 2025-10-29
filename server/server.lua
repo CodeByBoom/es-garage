@@ -64,50 +64,24 @@ exports['sandbox-base']:RegisterServerCallback('Garage:GetVehicles', function(so
     local characterId = character:GetData('SID')
     local vehType = garageData.Type == 'car' and 0 or (garageData.Type == 'air' and 2 or 1)
     
-    -- Get ALL personal vehicles (both stored AND active) to count stats properly
+    -- Get vehicles stored in this garage
     exports['sandbox-vehicles']:OwnedGetAll(vehType, 0, characterId, function(vehicles)
         if vehicles then
             local filteredVehicles = {}
-            local totalVehicles = 0
-            local carsOnStreet = 0
             
             for k, v in ipairs(vehicles) do
                 -- Check if vehicle is currently spawned/active
                 local isActive = exports['sandbox-vehicles']:OwnedGetActive(v.VIN)
                 
-                -- Only count vehicles that belong to THIS garage (either stored here or were last stored here)
-                local belongsToThisGarage = v.Storage and v.Storage.Id == storageId
-                
-                if belongsToThisGarage then
-                    totalVehicles = totalVehicles + 1
-                    
-                    -- Count cars on street from THIS garage
-                    if isActive or v.Storage.Type == 0 then
-                        carsOnStreet = carsOnStreet + 1
-                    end
-                    
-                    -- Only show vehicles that are stored AND not currently spawned
-                    if not isActive and v.Storage.Type == 1 then
-                        table.insert(filteredVehicles, v)
-                    end
+                -- Only show vehicles that are stored in THIS garage AND not currently spawned
+                if v.Storage and v.Storage.Id == storageId and not isActive and v.Storage.Type == 1 then
+                    table.insert(filteredVehicles, v)
                 end
             end
             
-            cb({
-                vehicles = filteredVehicles,
-                stats = {
-                    total = totalVehicles,
-                    onStreet = carsOnStreet
-                }
-            })
+            cb({ vehicles = filteredVehicles })
         else
-            cb({
-                vehicles = {},
-                stats = {
-                    total = 0,
-                    onStreet = 0
-                }
-            })
+            cb({ vehicles = {} })
         end
     end, nil, nil, false, false, {
         _id = 0,

@@ -9,11 +9,11 @@ local vehicleParkingSpaces = {} -- Maps VIN to parking space vector4
 local savedParkingSpaces = {} -- Persistent storage: VIN -> {space = vector4, garageId = string}
 local isVisible = false -- Track if garage UI is open
 
--- Thread to hide HUD elements while garage UI is open
+-- Thread to hide HUD elements while garage UI is open (optimized)
 Citizen.CreateThread(function()
     while true do 
-        Wait(0)
         if isVisible then
+            -- Use Wait(0) only when UI is visible for smooth HUD hiding
             HideHudComponentThisFrame(1)  -- Wanted Stars
             HideHudComponentThisFrame(2)  -- Weapon Icon
             HideHudComponentThisFrame(3)  -- Cash
@@ -24,8 +24,9 @@ Citizen.CreateThread(function()
             HideHudComponentThisFrame(9)  -- Street Name
             HideHudComponentThisFrame(13) -- Cash Change
             HideHudComponentThisFrame(19) -- Weapon Wheel
+            Wait(0)
         else
-            Wait(500) -- Sleep when UI is not visible
+            Wait(1000) -- Sleep longer when UI is not visible to reduce CPU usage
         end
     end
 end)
@@ -43,7 +44,6 @@ function LoadParkingSpaces()
                     }
                 end
             end
-            print("^2[ES-GARAGE] Loaded " .. TableLength(savedParkingSpaces) .. " saved parking spaces^7")
         end
     end)
 end
@@ -80,16 +80,9 @@ function GetGarageAtCoords(coords)
 end
 
 function IsParkingSpaceFree(coords)
-    local vehicles = GetGamePool('CVehicle')
-    for _, vehicle in ipairs(vehicles) do
-        if DoesEntityExist(vehicle) then
-            local vehCoords = GetEntityCoords(vehicle)
-            if #(vehCoords - coords.xyz) < 3.0 then
-                return false
-            end
-        end
-    end
-    return true
+    -- Optimized: Use GetClosestVehicle instead of looping through all vehicles
+    local closestVeh = GetClosestVehicle(coords.x, coords.y, coords.z, 3.0, 0, 71)
+    return closestVeh == 0 or not DoesEntityExist(closestVeh)
 end
 
 function GetClosestAvailableParkingSpace(pedCoords, spaces)
@@ -245,8 +238,6 @@ Citizen.CreateThread(function()
             local inGarage, garageId = GetGarageAtCoords(pedCoords)
             return inGarage
         end)
-    else
-        print("^1[ES-GARAGE] ERROR: _vehicleStorage table not found! Make sure sandbox-vehicles is loaded.^7")
     end
 end)
 
@@ -321,14 +312,14 @@ function OpenGarageUI()
     -- Get vehicles from server
     exports['sandbox-base']:ServerCallback('Garage:GetVehicles', garageId, function(response)
         if response and response.vehicles then
-            ProcessVehicles(response.vehicles, garageData, garageId, response.stats)
+            ProcessVehicles(response.vehicles, garageData, garageId)
         else
             exports['sandbox-hud']:Notification("error", "Failed to load vehicle data")
         end
     end)
 end
 
-function ProcessVehicles(vehicles, text, storageId, stats)
+function ProcessVehicles(vehicles, text, storageId)
     if vehicles and #vehicles > 0 then 
         local data = {}
         vehicleParkingSpaces = {} -- Reset parking space assignments
@@ -407,8 +398,7 @@ function ProcessVehicles(vehicles, text, storageId, stats)
             SendNUIMessage({
                 data = "GARAGE",
                 car = data,
-                name = text.UIName,
-                stats = stats or { total = #data, onStreet = 0 }
+                name = text.UIName
             })
         else
             exports['sandbox-hud']:Notification("error", "No vehicles available in this garage.")
@@ -462,15 +452,23 @@ local cameraZoomLevel = 1.0
 local minZoomLevel = 0.5
 local maxZoomLevel = 3.0
 
+-- Optimized rotation callbacks with throttling
+local lastRotationTime = 0
+local rotationDelay = 10 -- ms between rotations
+
 RegisterNUICallback("rotateright", function()
-    if currentVeh then
+    local currentTime = GetGameTimer()
+    if currentVeh and (currentTime - lastRotationTime) >= rotationDelay then
         SetEntityHeading(currentVeh, GetEntityHeading(currentVeh) - 2)
+        lastRotationTime = currentTime
     end
 end)
 
 RegisterNUICallback("rotateleft", function()
-    if currentVeh then
+    local currentTime = GetGameTimer()
+    if currentVeh and (currentTime - lastRotationTime) >= rotationDelay then
         SetEntityHeading(currentVeh, GetEntityHeading(currentVeh) + 2)
+        lastRotationTime = currentTime
     end
 end)
 
@@ -535,20 +533,20 @@ RegisterNUICallback('VehicleInfo', function(data, cb)
     -- Use the assigned parking space for this vehicle instead of generic spawn point
     local spawnPos = vehicleParkingSpaces[data.data.VIN] or LastCamera.vehSpawn
     
-    -- Clear any existing vehicles at this parking spot to prevent collisions
-    local nearbyVehicles = GetGamePool('CVehicle')
-    for _, veh in ipairs(nearbyVehicles) do
-        if DoesEntityExist(veh) then
-            local vehCoords = GetEntityCoords(veh)
-            local distance = #(vector3(spawnPos.x, spawnPos.y, spawnPos.z) - vehCoords)
-            -- If there's a vehicle within 3 meters of the spawn spot, delete it
-            if distance < 3.0 then
-                DeleteVehicle(veh)
-            end
-        end
+    -- Optimized: Use GetClosestVehicle instead of looping through all vehicles
+    local nearbyVeh = GetClosestVehicle(spawnPos.x, spawnPos.y, spawnPos.z, 3.0, 0, 71)
+    if nearbyVeh ~= 0 and DoesEntityExist(nearbyVeh) then
+        DeleteVehicle(nearbyVeh)
     end
     
-    currentVeh = CreateVehicle(model, spawnPos.x, spawnPos.y, spawnPos.z, spawnPos.w, false, true)
+    -- Create preview vehicle with optimization flags
+    currentVeh = CreateVehicle(model, spawnPos.x, spawnPos.y, spawnPos.z, spawnPos.w, false, false)
+    
+    -- Optimize preview vehicle (not needed for gameplay)
+    SetEntityAsMissionEntity(currentVeh, true, true)
+    SetVehicleHasBeenOwnedByPlayer(currentVeh, false)
+    SetVehicleNeedsToBeHotwired(currentVeh, false)
+    SetVehRadioStation(currentVeh, "OFF")
     SetVehicleEngineOn(currentVeh, true, true, false)
     
     -- Note: Properties are not applied to preview vehicle (only when actually spawned)
@@ -609,16 +607,26 @@ RegisterNUICallback('SpawnVehicle', function(data)
 end)
 
 function CloseGarage()
-    if currentVeh ~= nil then 
+    -- Optimized: Check entity existence before deletion
+    if currentVeh then
+        if DoesEntityExist(currentVeh) then
         DeleteVehicle(currentVeh)
+        end
+        currentVeh = nil
     end
     
     -- Don't clear LastCamera/LastSpawnPos/LastStorageId - they're reused on next open
-    currentVeh = nil
     currentGarageData = nil
+    
+    -- Optimized camera cleanup
+    if vehCam then
+        DestroyCam(vehCam, false)
+        vehCam = nil
+    end
+    
     DestroyAllCams(true)
     RenderScriptCams(false, true, 1700, true, false, false)
-    SetFocusEntity(GetPlayerPed(PlayerId()))
+    SetFocusEntity(PlayerPedId())
     SetNuiFocus(false, false)
     DisplayRadar(true)
     isVisible = false
