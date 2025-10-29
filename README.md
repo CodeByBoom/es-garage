@@ -6,7 +6,7 @@
 
 <br/>
 
-![Version](https://img.shields.io/badge/Version-2.0.0-8000FF?style=for-the-badge&logo=semantic-release&logoColor=white)
+![Version](https://img.shields.io/badge/Version-2.0.1-8000FF?style=for-the-badge&logo=semantic-release&logoColor=white)
 ![Framework](https://img.shields.io/badge/Framework-Sandbox-00D9FF?style=for-the-badge&logo=fivem&logoColor=white)
 ![UI](https://img.shields.io/badge/UI-Vue%203-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
 ![License](https://img.shields.io/badge/License-Custom-FF6B6B?style=for-the-badge&logo=shield&logoColor=white)
@@ -486,7 +486,7 @@ es-garage/
 </td>
 <td width="50%">
 
-### ✨ Sandbox Adaptation (v2.0.0)
+### ✨ Sandbox Adaptation (v2.0.1)
 
 **Adapted By:** CodeByBoom  
 **Framework:** Sandbox Framework ONLY  
@@ -533,7 +533,7 @@ This resource is a **derivative work** based on the original ES Garage by Raider
 - Credit to original author (**Raider#0101**)
 - Credit to Sandbox adaptation (**CodeByBoom**)
 
-**© 2025 | v2.0.0 | Derivative work based on ES Garage by Raider#0101**
+**© 2025 | v2.0.1 | Derivative work based on ES Garage by Raider#0101**
 
 </div>
 
